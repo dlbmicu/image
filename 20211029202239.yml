@@ -1,0 +1,78 @@
+version: "3.5"
+services:
+        kodexlporer:
+            image: kodcloud/kodexplorer
+            ports:
+                - 80:80
+            volumes:
+                - "${PWD}/kodbox/data:/var/www/html"
+        v2ray:
+            image: v2fly/v2fly-core
+            ports: 
+                - 6666:6666
+            volumes: 
+                - "${PWD}/v2ray:/etc/v2ray"
+        aria:
+            image: p3terx/aria2-pro
+            volumes: 
+                - "${PWD}/aria/aria2-config:/config"
+                - "${PWD}/kodbox/data/data/User/admin/home/downloads:/downloads"
+            depends_on: 
+                - kodexlporer
+            ports:
+                - 6800:6800
+                - 6888:6888
+                - 6888:6888/udp         
+            environment: 
+                - "PUID:65534"
+                - "PGID:65534"
+                - "UMASK_SET:022"
+                - "RPC_SECRET:P3TERX"
+                - "RPC_PORT:6800"
+                - "LISTEN_PORT:6888"
+                - "DISK_CACHE:64M"
+                - "IPV6_MODE:false"
+                - "UPDATE_TRACKERS:true"
+                - "CUSTOM_TRACKER_URL:"
+                - "TZ:Asia/Shanghai"
+        ariang:
+            image: p3terx/ariang
+            ports: 
+                - 6880:6880
+            depends_on: 
+                - aria
+        portainer:
+            image: portainer/portainer
+            ports: 
+                - 9000:9000
+            volumes: 
+                - /var/run/docker.sock:/var/run/docker.sock
+        rsshub:
+            image: diygod/rsshub
+            ports:
+                - 1200:1200
+            environment:
+                - "NODE_ENV:production"
+                - "CACHE_TYPE:redis"
+                - "REDIS_URL:'redis://redis:6379/'"
+                - "PUPPETEER_WS_ENDPOINT:'ws://browserless:3000'"
+            depends_on:
+                - redis
+                - browserless
+        browserless:
+            image: browserless/chrome:1.43-chrome-stable
+        redis:
+            image: redis:alpine
+            volumes:
+                - ${PWD}/redis/data:/data
+        nexus:
+            image: sonatype/nexus3
+            ports:
+                - 8081:8081
+            volumes:
+                - ${PWD}/nexus/data:/nexus-data
+            environment:
+                - INSTALL4J_ADD_VM_PARAMS=-Xms128m -Xmx256m -XX:MaxDirectMemorySize=64m
+            
+
+
