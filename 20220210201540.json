@@ -1,0 +1,25 @@
+{
+    "language": "zh-hans",
+    "plugins": [
+        "hide-element",
+        "back-to-top-button",
+        "chapter-fold",
+        "code",
+        "splitter",
+        "-lunr",
+        "-search",
+        "search-pro",
+        "popup",
+        "-sharing",
+        "toc",
+        "mermaid-gb3"
+    ],
+    "pluginsConfig": {
+        "theme-default": {
+            "showLevel": true
+        },
+        "hide-element": {
+            "elements": [".gitbook-link"]
+        }
+    }
+}
