@@ -1,0 +1,7 @@
+module.exports = {
+  plugins: [
+'@vuepress/shared-utils',
+      'vuepress-plugin-mermaidjs',
+      'vuepress-plugin-auto-sidebar'
+  ]
+}
